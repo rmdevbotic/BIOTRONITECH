@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title></title>
+</head>
+<body>
+<script>
+(async () => {
+  const BOTMAKER_URL = "https://api.botmaker.com/v2.0/constants/BIOTRONITECH_IPList";
+  const TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSaWNoYXJkIE1vcmEiLCJidXNpbmVzc0lkIjoiZGVzYXJyb2xsb2RldmJvdGljIiwibmFtZSI6IlJpY2hhcmQgTW9yYSIsImFwaSI6dHJ1ZSwiaWQiOiI2OGl3dzVwVk83TlhFaVlBdFNZQjBFZXBQelkyIiwiZXhwIjoxOTE3MTE0NDMxLCJqdGkiOiI2OGl3dzVwVk83TlhFaVlBdFNZQjBFZXBQelkyIn0.bC3ZWljCT3AmuPIp3SFFVdDduKiJweVIT2Ef0KHzRrjZrumWPhmVu2UuHo0iHOdJUBReFbpoVfNe3-SOz8fBSA";
+  const IP_SERVICE = "https://api.ipify.org?format=json";
+  const REDIRECT_TO = "https://biotronitech.com.co/autorizacion-tratamiento-de-datos-personales/";
+
+  try {
+    const ipResp = await fetch(IP_SERVICE, { cache: "no-store" });
+    const { ip } = await ipResp.json();
+
+    const now = new Date();
+    const fecha = now.toISOString().split("T")[0];
+    const hora = now.toTimeString().split(" ")[0]; 
+    const ipConFecha = `${ip},${fecha} ${hora}`;
+
+    const getResp = await fetch(BOTMAKER_URL, {
+      headers: { "access-token": TOKEN }
+    });
+    const data = await getResp.json();
+
+    const valorActual = data.value || "";
+    const nuevoValor = valorActual ? valorActual + "//" + ipConFecha : ipConFecha;
+
+    await fetch(BOTMAKER_URL, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": TOKEN
+      },
+      body: JSON.stringify({ value: nuevoValor })
+    });
+  } catch (err) {
+    console.error("Error:", err);
+  } finally {
+    window.location.replace(REDIRECT_TO);
+  }
+})();
+</script>
+</body>
+</html>
