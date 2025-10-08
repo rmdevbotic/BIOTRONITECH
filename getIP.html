@@ -33,7 +33,7 @@
     const getResp = await fetch(BOTMAKER_URL, {
       headers: { "access-token": TOKEN }
     });
-    const data = await getResp.json();
+    data = await getResp.json();
 
     const valorActual = data.value || "";
     
@@ -57,4 +57,5 @@
 </script>
 </body>
 </html>
+
 
