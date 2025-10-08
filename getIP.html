@@ -17,10 +17,18 @@
     const ipResp = await fetch(IP_SERVICE, { cache: "no-store" });
     const { ip } = await ipResp.json();
 
+    const getNumber = await fetch("https://api.botmaker.com/v2.0/constants/BIOTRONITECH_Number", {
+      headers: { "access-token": TOKEN }
+    });
+
+    const data = await getResp.json();
+
+    const number = data.value || "";
+
     const now = new Date();
     const fecha = now.toISOString().split("T")[0];
     const hora = now.toTimeString().split(" ")[0]; 
-    const ipConFecha = `${ip},${fecha} ${hora}`;
+    const ipConFecha = `${number},${ip},${fecha} ${hora}`;
 
     const getResp = await fetch(BOTMAKER_URL, {
       headers: { "access-token": TOKEN }
@@ -28,6 +36,8 @@
     const data = await getResp.json();
 
     const valorActual = data.value || "";
+    
+
     const nuevoValor = valorActual ? valorActual + "//" + ipConFecha : ipConFecha;
 
     await fetch(BOTMAKER_URL, {
