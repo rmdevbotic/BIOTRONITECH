@@ -33,13 +33,12 @@
     const getResp = await fetch(BOTMAKER_URL, {
       headers: { "access-token": TOKEN }
     });
-    data = await getResp.json();
+    const IPListData = await getResp.json();
 
-    const valorActual = data.value || "";
+    const valorActual = IPListData.value || "";
     
 
     const nuevoValor = valorActual ? valorActual + "//" + ipConFecha : ipConFecha;
-    alert(nuevoValor+'test');
     await fetch(BOTMAKER_URL, {
       method: "PATCH",
       headers: {
@@ -51,12 +50,13 @@
   } catch (err) {
     console.error("Error:", err);
   } finally {
-    //window.location.replace(REDIRECT_TO);
+    window.location.replace(REDIRECT_TO);
   }
 })();
 </script>
 </body>
 </html>
+
 
 
 
