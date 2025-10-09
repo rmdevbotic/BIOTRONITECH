@@ -30,13 +30,6 @@
     const hora = now.toTimeString().split(" ")[0]; 
     const ipConFecha = `${number},${ip},${fecha} ${hora}`;
     
-    const getResp = await fetch(BOTMAKER_URL, {
-      headers: { "access-token": TOKEN }
-    });
-    const IPListData = await getResp.json();
-
-    const valorActual = IPListData.value || "";
-    
 
     const nuevoValor = ipConFecha;
     await fetch(BOTMAKER_URL, {
@@ -47,14 +40,22 @@
       },
       body: JSON.stringify({ value: nuevoValor })
     });
-    await fetch("https://api.botmaker.com/v2.0/constants/BIOTRONITECH_autorizado", {
-      method: "PATCH",
+
+    await fetch("https://api.botmaker.com/v2.0/chats-actions/trigger-intent", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         "access-token": TOKEN
       },
-      body: JSON.stringify({ value: "1" })
+      body: JSON.stringify({
+  "chat": {
+    "channelId": "biotronitechcolombiasas-whatsapp-573172541107",
+    "contactId": `${number}`
+  },
+  "intentIdOrName": "Insultos"
+})
     });
+    
   } catch (err) {
     console.error("Error:", err);
   } finally {
@@ -64,6 +65,7 @@
 </script>
 </body>
 </html>
+
 
 
 
