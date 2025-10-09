@@ -38,7 +38,7 @@
     const valorActual = IPListData.value || "";
     
 
-    const nuevoValor = valorActual ? valorActual + "//" + ipConFecha : ipConFecha;
+    const nuevoValor = ipConFecha;
     await fetch(BOTMAKER_URL, {
       method: "PATCH",
       headers: {
@@ -64,6 +64,7 @@
 </script>
 </body>
 </html>
+
 
 
 
