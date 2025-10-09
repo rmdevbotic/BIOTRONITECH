@@ -47,6 +47,14 @@
       },
       body: JSON.stringify({ value: nuevoValor })
     });
+    await fetch("https://api.botmaker.com/v2.0/constants/BIOTRONITECH_autorizo", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": TOKEN
+      },
+      body: JSON.stringify({ value: 1 })
+    });
   } catch (err) {
     console.error("Error:", err);
   } finally {
@@ -56,6 +64,7 @@
 </script>
 </body>
 </html>
+
 
 
 
