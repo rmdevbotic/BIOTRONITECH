@@ -8,74 +8,49 @@
 <body>
 <script>
 (async () => {
-  const BOTMAKER_URL = "https://api.botmaker.com/v2.0/constants/BIOTRONITECH_IPList";
   const TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJGZWxpcGUgQ2FzdHJvIiwiYnVzaW5lc3NJZCI6ImJpb3Ryb25pdGVjaGNvbG9tYmlhc2FzIiwibmFtZSI6IkZlbGlwZSBDYXN0cm8iLCJhcGkiOnRydWUsImlkIjoiWTdwUnFYNmJYcVcwdFRlWGFianIwb01Ma1ZqMiIsImV4cCI6MTkxNzU1NDgzOSwianRpIjoiWTdwUnFYNmJYcVcwdFRlWGFianIwb01Ma1ZqMiJ9.ssfoPx1Af8Cz9f47u5ed6L0Wgq_nQ7odMK3QtZCp0tV_VxASAflyzCWmOn7toPOSo_o1TwYu5TSNNSxZIcbcdg";
-  const IP_SERVICE = "https://api.ipify.org?format=json";
-  const REDIRECT_TO = "https://biotronitech.com.co/autorizacion-tratamiento-de-datos-personales/";
 
-  try {
-    const ipResp = await fetch(IP_SERVICE, { cache: "no-store" });
-    const { ip } = await ipResp.json();
+  const number = new URLSearchParams(window.location.search).get('number');
 
-    const getNumber = await fetch("https://api.botmaker.com/v2.0/constants/BIOTRONITECH_Number", {
-      headers: { "access-token": TOKEN }
-    });
+  const ipResponse = await fetch("https://api.ipify.org?format=json", { cache: "no-store" });
+  const ipData = await ipResponse.json();
+  const ip = ipData.ip;
 
-    const data = await getNumber.json();
-
-    const number = data.value || "";
-
-    const now = new Date();
-    const fecha = now.toISOString().split("T")[0];
-    const hora = now.toTimeString().split(" ")[0]; 
-    const ipConFecha = `${number},${ip},${fecha} ${hora}`;
-    
-
-    const nuevoValor = ipConFecha;
-    await fetch(BOTMAKER_URL, {
-      method: "PATCH",
+  const getChat = await fetch(
+    `https://api.botmaker.com/v2.0/chats?channel-id=biotronitechcolombiasas-whatsapp-573172541107&contact-id=${number}`,
+    {
+      method: "GET",
       headers: {
-        "Content-Type": "application/json",
+        Accept: "application/json",
         "access-token": TOKEN
-      },
-      body: JSON.stringify({ value: nuevoValor })
-    });
+      }
+    }
+  );
 
-    await fetch("https://api.botmaker.com/v2.0/chats-actions/trigger-intent", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": TOKEN
-      },
-      body: JSON.stringify({
-  "chat": {
-    "channelId": "biotronitechcolombiasas-whatsapp-573172541107",
-    "contactId": `${number}`
-  },
-  "intentIdOrName": "guardartratamiento"
-})
-    });
-    
-  } catch (err) {
-    console.error("Error:", err);
-  } finally {
-    window.location.replace(REDIRECT_TO);
-  }
+  const chatData = await getChat.json();
+  const chatId = chatData?.items?.[0]?.chat?.chatId;
+
+  const now = new Date();
+  const offset = -5;
+  const local = new Date(now.getTime() + offset * 60 * 60 * 1000);
+  const fecha = local.toISOString().split("T")[0];
+  const hora = local.toTimeString().split(" ")[0];
+  const ipConFecha = `${number},${ip},${fecha} ${hora}`;
+
+  await fetch(`https://api.botmaker.com/v2.0/chats/${chatId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "access-token": TOKEN
+    },
+    body: JSON.stringify({
+      variables: { IP: ipConFecha }
+    })
+  });
+
+  window.location.replace("https://biotronitech.com.co/autorizacion-tratamiento-de-datos-personales/");
 })();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
