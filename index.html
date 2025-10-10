@@ -10,7 +10,7 @@
 (async () => {
   const TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJGZWxpcGUgQ2FzdHJvIiwiYnVzaW5lc3NJZCI6ImJpb3Ryb25pdGVjaGNvbG9tYmlhc2FzIiwibmFtZSI6IkZlbGlwZSBDYXN0cm8iLCJhcGkiOnRydWUsImlkIjoiWTdwUnFYNmJYcVcwdFRlWGFianIwb01Ma1ZqMiIsImV4cCI6MTkxNzU1NDgzOSwianRpIjoiWTdwUnFYNmJYcVcwdFRlWGFianIwb01Ma1ZqMiJ9.ssfoPx1Af8Cz9f47u5ed6L0Wgq_nQ7odMK3QtZCp0tV_VxASAflyzCWmOn7toPOSo_o1TwYu5TSNNSxZIcbcdg";
 
-  const numero = new URLSearchParams(window.location.search).get('numero');
+  const numero = new URLSearchParams(window.location.search).get('number');
 
   const respuestaIp = await fetch("https://api.ipify.org?format=json", { cache: "no-store" });
   const datosIp = await respuestaIp.json();
@@ -53,6 +53,10 @@
   });
 
   window.location.replace("https://biotronitech.com.co/autorizacion-tratamiento-de-datos-personales/");
+
+  setTimeout(() => {
+    window.location.href = 'https://wa.me/573172541107';
+  }, 10000);
 })();
 </script>
 </body>
