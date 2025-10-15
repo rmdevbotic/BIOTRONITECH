@@ -29,13 +29,9 @@
 
   const datosChat = await obtenerChat.json();
   const idChat = datosChat?.items?.[0]?.chat?.chatId;
+  const fecha = datosChat?.items?.[0]?.variables?.FechaActual;
 
-  const ahora = Date.now();
-  const diferencia = -5;
-  const local = new Date(ahora + diferencia * 60 * 60 * 1000);
-  const fecha = local.toISOString().split("T")[0];
-  const hora = local.toTimeString().split(" ")[0];
-  const ipConFecha = `${numero},${ip},${fecha} ${hora}`;
+  const ipConFecha = `${numero},${ip},${fecha}`;
 
   await fetch(`https://api.botmaker.com/v2.0/chats/${idChat}`, {
     method: "PATCH",
@@ -56,6 +52,7 @@
 </script>
 </body>
 </html>
+
 
 
 
