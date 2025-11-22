@@ -31,7 +31,8 @@
   const idChat = datosChat?.items?.[0]?.chat?.chatId;
   const fecha = datosChat?.items?.[0]?.variables?.FechaActual;
   const redirectURL = datosChat?.items?.[0]?.variables?.BIOTRONITECH_redirectURL;
-
+  alert(redirectURL);
+  alert("hola");
   const ipConFecha = `${numero},${ip},${fecha}`;
 
   await fetch(`https://api.botmaker.com/v2.0/chats/${idChat}`, {
@@ -49,7 +50,7 @@
     })
   });
 
-  alert(redirectURL);
+  
   const actualizarChat = await fetch(redirectURL);
 
   
@@ -58,6 +59,7 @@
 </script>
 </body>
 </html>
+
 
 
 
