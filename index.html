@@ -30,7 +30,7 @@
   const datosChat = await obtenerChat.json();
   const idChat = datosChat?.items?.[0]?.chat?.chatId;
   const fecha = datosChat?.items?.[0]?.variables?.FechaActual;
-  const redirectURL = datosChat?.items?.[0]?.variables?.BIOTRONITECH_redirectURL;
+  const retakeURL = datosChat?.items?.[0]?.variables?.BIOTRONITECH_retakeURL;
   alert(redirectURL);
   alert("hola");
   const ipConFecha = `${numero},${ip},${fecha}`;
@@ -51,7 +51,7 @@
   });
 
   
-  const actualizarChat = await fetch(redirectURL);
+  const actualizarChat = await fetch(retakeURL);
 
   
   window.location.replace("https://biotronitech.com.co/autorizacion-tratamiento-de-datos-personales/");
@@ -59,6 +59,7 @@
 </script>
 </body>
 </html>
+
 
 
 
