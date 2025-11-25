@@ -17,7 +17,7 @@
   const ip = datosIp.ip;
 
   const obtenerChat = await fetch(
-    `https://api.botmaker.com/v2.0/chats?channel-id=biotronitechcolombiasas-whatsapp-573172541107&contact-id=${numero}`,
+    `https://api.botmaker.com/v2.0/chats?channel-id=biotronitechcolombiasas-whatsapp-573172541107&contact-id=${encodeURIComponent(numero)}`,
     {
       method: "GET",
       headers: {
@@ -30,8 +30,12 @@
   const datosChat = await obtenerChat.json();
   const idChat = datosChat?.items?.[0]?.chat?.chatId;
   const fecha = datosChat?.items?.[0]?.variables?.FechaActual;
-  const retakeURL = datosChat?.items?.[0]?.variables?.BIOTRONITECH_retakeURL;
   const ipConFecha = `${numero},${ip},${fecha}`;
+
+  if (!idChat) {
+    console.error("No se encontró chat para ese número.");
+    return;
+  }
 
   await fetch(`https://api.botmaker.com/v2.0/chats/${idChat}`, {
     method: "PATCH",
@@ -48,36 +52,31 @@
     })
   });
 
-  
-  const iframe = document.createElement("iframe");
-iframe.style.display = "none";
-iframe.src = retakeURL;
-document.body.appendChild(iframe);
+  await fetch("https://api.botmaker.com/v2.0/chats-actions/send-messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "access-token": TOKEN
+    },
+    body: JSON.stringify({
+      chat: {
+        chatId: idChat,
+        channelId: "biotronitechcolombiasas-whatsapp-573172541107"
+      },
+      messages: [
+        {
+          text: "Gracias por su respuesta, si desea obtener mayor información sobre esta solicitud, puede hacerlo escribiendo al correo electrónico protecciondedatos@biotronitech.com.co"
+        }
+      ]
+    })
+  });
 
-
-setTimeout(() => {
-  window.location.replace("https://biotronitech.com.co/autorizacion-tratamiento-de-datos-personales/");
-}, 700);
+  setTimeout(() => {
+    window.location.replace("https://biotronitech.com.co/autorizacion-tratamiento-de-datos-personales/");
+  }, 700);
 
 })();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
